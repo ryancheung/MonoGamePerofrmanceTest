@@ -240,14 +240,16 @@ namespace Game1
 
             RenderGame();
 
-            Console.WriteLine("====FrameLogStart====");
             watch.Stop();
             double time = watch.Elapsed.TotalMilliseconds;
             if (time > 10)
+            {
+                Console.WriteLine("====FrameLogStart====");
                 Console.WriteLine(String.Format("{0} - Slow update: {1}", DateTime.Now.ToLocalTime().ToLongTimeString(), time));
 
-            Console.WriteLine(String.Format("Metrics: {0}", GetMetrics()));
-            Console.WriteLine("====FrameLogEnd====");
+                Console.WriteLine(String.Format("Metrics: {0}", GetMetrics()));
+                Console.WriteLine("====FrameLogEnd====");
+            }
 
             base.Draw(gameTime);
         }
