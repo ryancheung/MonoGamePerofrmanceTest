@@ -71,6 +71,8 @@ namespace Game1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _testTex = Content.Load<Texture2D>("test");
 
+            Device.BlendState = BlendState.AlphaBlend.Clone();
+
             GC.Collect();
         }
 
@@ -145,24 +147,21 @@ namespace Game1
 
             Sprite.Flush();
 
-            var newBlendState = Device.BlendState.Clone();
             if (opacity >= 1 || opacity < 0)
             {
-                newBlendState.ColorSourceBlend = Blend.SourceAlpha;
-                newBlendState.ColorDestinationBlend = Blend.InverseSourceAlpha;
-                newBlendState.AlphaSourceBlend = Blend.One;
-                newBlendState.BlendFactor = new Color(255, 255, 255, 255);
-                Device.BlendState = newBlendState;
+                Device.BlendState.ColorSourceBlend = Blend.SourceAlpha;
+                Device.BlendState.ColorDestinationBlend = Blend.InverseSourceAlpha;
+                Device.BlendState.AlphaSourceBlend = Blend.One;
+                Device.BlendFactor = new Color(255, 255, 255, 255);
                 DisableAlphaTest();
             }
             else
             {
                 EnableAlphaTest();
-                newBlendState.ColorSourceBlend = Blend.BlendFactor;
-                newBlendState.ColorDestinationBlend = Blend.InverseBlendFactor;
-                newBlendState.AlphaSourceBlend = Blend.SourceAlpha;
-                newBlendState.BlendFactor = new Color((byte)(255 * opacity), (byte)(255 * opacity), (byte)(255 * opacity), (byte)(255 * opacity));
-                Device.BlendState = newBlendState;
+                Device.BlendState.ColorSourceBlend = Blend.BlendFactor;
+                Device.BlendState.ColorDestinationBlend = Blend.InverseBlendFactor;
+                Device.BlendState.AlphaSourceBlend = Blend.SourceAlpha;
+                Device.BlendFactor = new Color((byte)(255 * opacity), (byte)(255 * opacity), (byte)(255 * opacity), (byte)(255 * opacity));
             }
             
             Opacity = opacity;
@@ -182,11 +181,9 @@ namespace Game1
                 Sprite.Begin(SpriteFlags.DoNotSaveState);
                 EnableAlphaTest();
 
-                var newBlendState = Device.BlendState.Clone();
-                newBlendState.ColorSourceBlend = Blend.BlendFactor;
-                newBlendState.ColorDestinationBlend = Blend.One;
-                newBlendState.BlendFactor = new Color((byte)(255 * rate), (byte)(255 * rate), (byte)(255 * rate), (byte)(255 * rate));
-                Device.BlendState = newBlendState;
+                Device.BlendState.ColorSourceBlend = Blend.BlendFactor;
+                Device.BlendState.ColorDestinationBlend = Blend.One;
+                Device.BlendFactor = new Color((byte)(255 * rate), (byte)(255 * rate), (byte)(255 * rate), (byte)(255 * rate));
             }
             else
             {
@@ -201,12 +198,12 @@ namespace Game1
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteFlags.AlphaBlend);
 
             _spriteBatch.Draw(_testTex, new Vector2(0, 0), Color.White);
 
-            for (int i = 0; i < 500; ++i) {
                 Random rand = new Random();
+            for (int i = 0; i < 500; ++i) {
 
                 int posX = (int)(rand.NextDouble() * GraphicsDevice.Viewport.Width);
                 int posY = (int)(rand.NextDouble() * GraphicsDevice.Viewport.Height);
